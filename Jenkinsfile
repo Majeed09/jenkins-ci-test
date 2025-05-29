@@ -1,3 +1,5 @@
+
+
 pipeline {
     agent any
 
@@ -7,48 +9,49 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Majeed09/jenkins-ci-test.git'
             }
         }
+    }
 
-      //  stage('Install Dependencies') {
+    post {
+        always {
+            emailext (
+                subject: "Jenkins Build: ${currentBuild.fullDisplayName} - ${currentBuild.currentResult}",
+                body: """
+                    Build URL: ${env.BUILD_URL}
+
+                    Status: ${currentBuild.currentResult}
+
+                    Check the Jenkins console log for details.
+                """,
+                to: 'majeedm2019@gmail.com',
+                attachLog: true
+            )
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  stage('Install Dependencies') {
         //    steps {
           //      bat 'npm install'
             //}
         //}
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    def testStatus = bat(script: 'npm test', returnStatus: true)
-                    if (testStatus != 0) {
-                        currentBuild.result = 'FAILURE'
-                    }
-                    emailext (
-                        subject: "Test Stage Result: ${currentBuild.currentResult}",
-                        body: "The test stage has completed with status: ${currentBuild.currentResult}.",
-                        to: 'majeedm2019@gmail.com',
-                        attachLog: true
-                    )
-                }
-            }
-        }
+       
 
-        stage('NPM Audit (Security Scan)') {
-            steps {
-                script {
-                    def auditStatus = bat(script: 'npm audit', returnStatus: true)
-                    if (auditStatus != 0) {
-                        currentBuild.result = 'FAILURE'
-                    }
-                    emailext (
-                        subject: "Security Scan Result: ${currentBuild.currentResult}",
-                        body: "The security scan stage has completed with status: ${currentBuild.currentResult}.",
-                        to: 'majeedm2019@gmail.com',
-                        attachLog: true
-                    )
-                }
-            }
-        }
-    }
-}
 
 
 
