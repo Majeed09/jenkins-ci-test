@@ -1,66 +1,24 @@
 pipeline {
     agent any
+
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/Majeed09/jenkins-ci-test.git'
+                echo 'Hello from Jenkins! No Node.js project needed.'
             }
         }
-        stage('Install Dependencies') {
+
+        stage('Post-build') {
             steps {
-                bat 'npm install'
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                bat 'npm test || exit /b 0' // Continue even if tests fail
-            }
-            post {
-                success {
-                    emailext(
-                        to: 'iimabdulmajeed20@gmail.com',
-                        subject: "Tests Passed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "Tests succeeded in ${env.JOB_NAME} #${env.BUILD_NUMBER}. See build log for details.",
-                        attachLog: true
-                    )
-                }
-                failure {
-                    emailext(
-                        to: 'iimabdulmajeed20@gmail.com',
-                        subject: "Tests Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "Tests failed in ${env.JOB_NAME} #${env.BUILD_NUMBER}. See build log for details.",
-                        attachLog: true
-                    )
-                }
-            }
-        }
-        stage('Generate Coverage Report') {
-            steps {
-                bat 'npm run coverage || exit /b 0'
-            }
-        }
-        stage('NPM Audit (Security Scan)') {
-            steps {
-                bat 'npm audit || exit /b 0' // Continue even if vulnerabilities found
-            }
-            post {
-                success {
-                    emailext(
-                        to: 'iimabdulmajeed20@gmail.com',
-                        subject: "Security Scan Passed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "Security scan passed in ${env.JOB_NAME} #${env.BUILD_NUMBER}. See build log for details.",
-                        attachLog: true
-                    )
-                }
-                failure {
-                    emailext(
-                        to: 'iimabdulmajeed20@gmail.com',
-                        subject: "Security Scan Issues - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "Security scan found issues in ${env.JOB_NAME} #${env.BUILD_NUMBER}. See build log for details.",
-                        attachLog: true
-                    )
-                }
+                echo 'Pipeline executed successfully!'
             }
         }
     }
 }
+
+
+
+
+
+
+
