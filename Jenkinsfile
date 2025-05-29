@@ -41,7 +41,7 @@ pipeline {
                     emailext (
                         subject: "Security Scan Result: ${currentBuild.currentResult}",
                         body: "The security scan stage has completed with status: ${currentBuild.currentResult}.",
-                        to: 'YOUR_EMAIL_HERE',
+                        to: 'majeedm2019@gmail.com',
                         attachLog: true
                     )
                 }
